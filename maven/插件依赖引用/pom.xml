@@ -1,0 +1,69 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>CallThink</groupId>
+	<artifactId>UltraCRM-callback</artifactId> 
+	<packaging>war</packaging>  
+	<version>4.1.0</version>
+	<name>UltraCRM Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<properties>   
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java-version>1.8</java-version>
+		<jdk.version>1.8</jdk.version> 
+      
+		<springframework.version>5.0.8.RELEASE</springframework.version>
+
+		 
+
+	</properties>
+	<dependencies>
+
+	<dependency>
+		<groupId>CallThink.plugin</groupId>
+		<artifactId>demo-maven-plugin</artifactId>
+		<version>1.0.0</version>
+	</dependency>
+
+  </dependencies>
+
+  
+	<build>
+		<finalName>UltraCRM-demo</finalName>
+		<plugins>
+          
+  	    
+  	     <!-- 自定义插件 -->
+					<plugin>
+						<groupId>CallThink.plugin</groupId>
+						<artifactId>demo-maven-plugin</artifactId>
+						<version>1.0.0</version>
+						<configuration>
+							<application>${artifactId}</application><!-- 当前应用名称 -->
+							<version>${version}</version><!-- 当前应用版本号 -->
+							<sourceFolderPath>${basedir}/src/main/java</sourceFolderPath><!-- 当前应用根目录 -->
+							<outFolderPath>${basedir}/doc</outFolderPath><!-- 生成文档目录 -->
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package </phase>
+								<goals>
+									<goal>doc</goal>
+								</goals>
+							</execution>
+						</executions>
+					<!-- 	<dependencies>
+		                    <dependency>
+		                     	<groupId>CallThink.plugin</groupId>
+								<artifactId>demo-maven-plugin</artifactId>
+								<version>1.0.0</version>
+		                    </dependency>
+		                </dependencies> -->
+					</plugin>
+		</plugins>
+	</build>
+
+
+    
+</project>

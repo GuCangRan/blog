@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+
+  <style>
+    .row {
+      margin: 30px 30px;
+    }
+
+    .example-1 {
+      height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .example-2,
+    .example-3,
+    .example-4,
+    .example-5 {
+      height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #one,
+    #two {
+      padding: 20px;
+    }
+
+    #one p {
+      padding: 0;
+    }
+
+    .example-4,
+    .example-5 {
+      height: 400px;
+    }
+
+    .split p {
+      padding: 20px;
+    }
+
+    .split {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .gutter {
+      background-color: #eee;
+
+      background-repeat: no-repeat;
+      background-position: 50%;
+
+      cursor: move;
+      cursor: grab;
+      cursor: -moz-grab;
+      cursor: -webkit-grab;
+    }
+
+    .gutter:active {
+      cursor: grabbing;
+      cursor: -moz-grabbing;
+      cursor: -webkit-grabbing;
+    }
+
+    .gutter.gutter-horizontal {
+      background-image: url('grips/vertical.png');
+    }
+
+    .gutter.gutter-vertical {
+      background-image: url('grips/horizontal.png');
+    }
+
+    .split.split-horizontal,
+    .gutter.gutter-horizontal {
+      height: 100%;
+      float: left;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2> 左右布局</h2>
+  <div class="row example-1">
+    <div id="one" class="split split-horizontal">
+      <p>左右测试</p>
+    </div>
+    <div id="two" class="split split-horizontal">
+      <h5>哈哈 </h5>
+    </div>
+  </div>
+
+  <h2>三列布局</h2>
+  <div class="row example-3">
+    <div id="five" class="split split-horizontal">
+      1
+    </div>
+    <div id="six" class="split split-horizontal">
+      2
+    </div>
+    <div id="seven" class="split split-horizontal">
+      <p>3 aasfdadfsdfsadf</p>
+      <p>3 aasfdadfsdfsadf</p>
+      <p>3 aasfdadfsdfsadf</p>
+      <p>3 aasfdadfsdfsadf</p>
+      <p>3 aasfdadfsdfsadf</p>
+    </div>
+  </div>
+
+
+  <h2>上下布局</h2>
+  <div class="row example-4">
+    <div id="eight" class="split split-vertical">
+      <p>上</p>
+    </div>
+    <div id="nine" class="split split-vertical">
+      <p>下 </p>
+    </div>
+  </div>
+
+  <h2>布局三</h2>
+  <div class="row example-5">
+    <div id="ten" class="split split-horizontal">
+      <div id="twelve" class="split split-vertical">
+        <p>左上</p>
+      </div>
+      <div id="thirteen" class="split split-vertical">
+        <p>左下</p>
+      </div>
+    </div>
+    <div id="eleven" class="split split-horizontal">
+      <p>右侧 </p>
+    </div>
+  </div>
+  </div>
+
+  <script src="./split.min.js"></script>
+  <script>
+    //两列
+    Split(['#one', '#two'], {
+      sizes: [29, 71],
+      minSize: 200
+    });
+
+    //三列
+    Split(['#five', '#six', '#seven'], {
+      minSize: [100, 100, 300]
+    });
+
+    //上下
+    Split(['#eight', '#nine'], {
+      direction: 'vertical'
+    });
+
+    //上下左右
+    Split(['#ten', '#eleven']);
+    Split(['#twelve', '#thirteen'], {
+      direction: 'vertical'
+    });
+  </script>
+</body>
+
+</html>
