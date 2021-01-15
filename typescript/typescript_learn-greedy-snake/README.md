@@ -66,10 +66,3 @@ npm run build
   }
 }
 ```
-
-### **其他**
-
-视频讲解：
-
--   [尚硅谷2021版TypeScript教程（李立超老师TS新课）](https://www.bilibili.com/video/BV1Xy4y1v7S2?p=22)
-
