@@ -1,6 +1,7 @@
 # awesome-f2e-libs
 
 > 整理我平时关注的前端库。
+复制来自: https://github.com/sorrycc/awesome-f2e-libs  感谢作者
 
 ## 打包工具
 
