@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script>
+    class Waiter {
+        constructor() {
+            this.dfd = [];                  // 注册了的等待对象容器
+            this.doneArr = [];              // 成功回调方法容器
+            this.failArr = [];              // 失败回调方法容器
+            this.slice = Array.prototype.slice;     // 缓存Array.slice方法
+        }
+
+        // 创建监听对象
+        Deferred() {
+            return new PromiseRebuild();
+        }
+
+        // 回调执行方法
+        _exec(arr) {
+            let i = 0,
+                len = arr.length;
+            for (; i < len; i++) {
+                arr[i] && arr[i]();
+            }
+        }
+
+        // 监控异步方法
+        when() {
+            // 设置监控对象
+            this.dfd = this.slice.call(arguments);
+            let i = this.dfd.length;
+            for (--i; i >= 0; i--) {
+                if(!this.dfd[i] || this.dfd[i].resolved || this.dfd[i].rejected || !this.dfd[i] instanceof PromiseRebuild) {
+                    this.dfd.splice(i, 1);
+                }
+            }
+            return this;
+        }
+
+        done() {
+            this.doneArr = this.doneArr.concat(this.slice.call(arguments));
+            return this;
+        }
+
+        fail() {
+            this.failArr = this.failArr.concat(this.slice.call(arguments));
+            return this;
+        }
+    }
+
+    // 监控对象类
+    class PromiseRebuild extends Waiter {
+        constructor() {
+            super();
+            this.resolved = false;          // 监控对象是否解决成功状态
+            this.rejected = false;          // 监控对象是否解决失败状态
+        }
+
+        // 解决成功
+        resolve() {
+            // 修改状态
+            this.resolved = true;
+            if (!this.dfd.length) {
+                return false;
+            }
+            // 遍历所有监控对象
+            for (let i = this.dfd.length - 1; i >= 0; i--) {
+                // 如果有任意一个监控兑现更没有被解决或者解决失败则返回
+                if (this.dfd[i] && !this.dfd.resolved || this.dfd[i].rejected) {
+                    return false;
+                }
+                this.dfd.splice(i, 1);
+            }
+            this._exec(this.doneArr)
+        }
+
+        // 解决失败
+        reject() {
+            this.rejected = true;
+            if (!this.dfd.length) {
+                return false;
+            }
+            // 清除所有监控对象
+            this.dfd.splice(0);
+            this._exec();
+        }
+    }
+
+    let waiter = new Waiter();
+    let first = function () {
+        let dtd = waiter.Deferred();
+        setTimeout(function () {
+            console.log('first finish');
+            dtd.resolve();
+        }, 5000);
+        return dtd;
+    };
+    first();
+    let second = function () {
+        let dtd = waiter.Deferred();
+        setTimeout(function () {
+            console.log('second finish');
+            dtd.resolve()
+        }, 10000);
+        return dtd;
+    };
+    second();
+
+    waiter.when(first, second)
+        .done(function () {
+            console.log('success')
+        }, function () {
+            console.log('success again')
+        })
+        .fail(function () {
+            console.log('fail');
+        });
+</script>
+</body>
+</html>

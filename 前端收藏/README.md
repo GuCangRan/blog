@@ -5,3 +5,6 @@
 ## 前端收藏库集合
 * [**sorrycc前端集合**](https://github.com/sorrycc/awesome-f2e-libs)
 * [**PanJiaChen前端集合**](https://github.com/PanJiaChen/awesome-bookmarks)
+
+## 工具
+* [awesome-tools](https://github.com/sorrycc/awesome-tools)

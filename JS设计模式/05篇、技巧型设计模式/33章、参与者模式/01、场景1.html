@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button>click me</button>
+<p>123</p>
+
+<script>
+    let A = {
+        event: {}
+    };
+    // 事件模块
+    A.event.on = function (dom, type, fn) {
+        if (dom.addEventListener) {
+            dom.addEventListener(type, fun, false);
+        } else if (dom.attachEvent) {
+            dom.attachEvent('on' + type, fn);
+        } else {
+            dom['on' + type] = fn;
+        }
+    };
+
+    /*上面存在的问题， addEventListener 没有办法在回到中传递参数， 做如下的修改*/
+    A.event.on2 = function (dom, tyoe, fn, data) {
+        if (dom.addEventListener) {
+            dom.addEventListener(type, function (e) {
+                fn.call(dom, e, data)
+            }, false);
+        }
+        // .............
+    };
+
+    /*
+    * 上面的方法确实是解决了参数传递的问题， 但是引发了一个新的问题
+    * 新的问题就是添加事件回调函数就不能移除了
+    * 为了解决这个问题， 就引入了bind 闭包
+    * */
+    let bind = function (fn, context) {
+        return function () {
+            return fn.apply(context, arguments)
+        }
+    };
+    // 对于bind 方法的测试
+    // let demoObj = {
+    //     title: '这是一个例子'
+    // };
+    // let demoFn = function () {
+    //     console.log(this.title)
+    // };
+    // let bindFn = bind(demoFn, demoObj);
+    // demoFn();               // undefined
+    // bindFn();               // '这是一个例子'
+
+    /*
+    * 实际应用
+    * */
+    let button = document.getElementsByTagName('button')[0];
+    let p = document.getElementsByTagName('p')[0];
+    let demoFn = function () {
+        console.log(arguments, this);
+    };
+    let bindFn = bind(demoFn);
+    bindFn = bind(demoFn, button);
+    bindFn = bind(demoFn, p);
+    button.addEventListener('click', bindFn);           // [MouseEvent]  Window
+    button.removeEventListener('click', bindFn)
+
+    /*
+    * 第一个需求是添加事件和移除事件已经成功了
+    * 第二个需求就是函数添加额外的自定义参数
+    * 这个时候就需要借助于函数柯里化了
+    * 函数柯里化： 根据传递的参数不同， 让一个函数存在多种状态， 处理的是函数
+    * */
+    let curry = function (fn) {
+        let Slice = [].slice;
+        let args = Slice.call(arguments, 1);
+        return function () {
+            let addArgs = Slice.call(arguments),
+                allArgs = args.concat(addArgs);
+            return fn.apply(null, allArgs);
+        }
+    };
+    // 柯里化的测试
+    // let add = function (num1, num2) {
+    //     return num1 + num2;
+    // };
+    // let add5 = function (num) {
+    //     return add(5, num)
+    // };
+    // console.log(add(1, 2));          // 3
+    // console.log(add5(6));           // 11
+    // add5 = curry(add, 5);
+    // console.log(add5(7));           // 12
+    // let add7and8 = curry(add, 7, 8);
+    // console.log(add7and8());        // 15
+
+    /*
+    * 通过柯里化重写bind
+    * */
+    bind = function (fn, context) {
+        let Slice = Array.prototype.slice,
+            args = Slice.call(arguments, 2);
+        return function () {
+            let addArgs = Slice.call(arguments),
+                allArgs = addArgs.concat(args);
+            return fn.apply(context, allArgs);
+        }
+    };
+    // 测试
+    // let demoDate1 = {
+    //     text: '这是第一组数据'
+    // };
+    // let demoData2 = {
+    //     text: '这是第二组数据'
+    // };
+    // bindFn = bind(demoFn, button, demoDate1);
+    // bindFn = bind(demoFn, button, demoDate1, demoData2);
+    // bindFn = bind(demoFn, p, demoDate1);
+    // bindFn = demoFn.bind(p, demoDate1);
+
+    /*
+    * 为了浏览器兼容性的实现， 我们需要给未提供bind方法的浏览器添加bind方法
+    * */
+    if(Function.prototype.bind === undefined) {
+        Function.prototype.bind = function (context) {
+            let Slice = Array.prototype.slice,
+                args = Slice.call(arguments, 1);
+            return () => {
+                let addArgs = Slice.call(arguments),
+                    allArgs = args.concat(addArgs);
+                return this.apply(context, allArgs);
+            }
+        }
+    }
+
+    /*
+    * 反柯里化函数
+    * */
+    Function.prototype.unCurry = function () {
+        return ()=> {
+            return Function.prototype.call.apply(this, arguments);
+        }
+    };
+    // 验证方法
+    let toString = Object.prototype.toString.unCurry();
+    console.log(toString(function(){}));
+    console.log(toString([]));
+
+    let push = [].push.unCurry();
+    let demoArr = {};
+    push(demoArr, '第一个成员', '第二个成员');
+    console.log(demoArr);
+</script>
+</body>
+</html>

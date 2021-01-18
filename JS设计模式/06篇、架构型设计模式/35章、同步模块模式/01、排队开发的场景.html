@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<dvi id="test"> test</dvi>
+
+<script>
+    /*
+    * 普通的场景情况
+    * 这样写的好处是方便， A工程师把数据和导航元素容器都保存在这里了， 我们可以直接用
+    * 缺点： A工程师正在修改导航， 那么BC工程师对导航的新需求就无法执行了。
+    * */
+    /*let data = null,
+        dom = A('#nav'),
+        createNav = function () {
+            // A 工程师完成创建导航创建逻辑
+            let li  = A('li', dom);
+            for (let i = 0, len = data.length; i < len; i++) {
+                if(data[i].hasGuide) {
+                    $(li[i]).addClass('has-guide')
+                }
+            }
+
+            // B 工程师加入 完成对导航添加事件需求
+            let li = A('li', dom);
+            li.on('mouseover', function () {
+                // 显示下拉框逻辑
+            }).on('mouseout', function () {
+                // 隐藏下拉框逻辑
+            })
+        };
+
+        A.ajax('/data/nav', function () {
+            if(res.errorNo === 0) {
+                data = res.data;
+                createNav();
+            }
+        });*/
+
+    /*
+    * 模块化开发就是讲复杂的系统分解为高内聚，低耦合的模块。
+    * 每个工程师都可以去开发自己的模块实现复杂的系统可控， 可维护， 可扩展。 模块相互之间可以调用
+    * 要点： 首先要有一个模块管理器， 管理模块的创建和调度
+    * 模块调动： 调用分为两类， 一类同步模块调用的实现， 第二类是一步模块的实现
+    * */
+    // 模块管理对象F
+    class F {
+        /**
+         * 创建模块
+         * @param str
+         * @param fn
+         * @returns {*}
+         */
+        static define(str, fn) {
+            let parts = str.split('.'),
+                old = this,
+                parent = this,
+                i = 0,
+                len = 0;                // i 是模块成绩， len是模块层级长度
+            // 如果第一个模块是管理模块器， 则移除
+            if (parts[0] === 'F') {
+                parts = parts.slice(1);
+            }
+            // 屏蔽对define与module模块
+            if (parts[0] === 'define' || parts[0] === 'module') {
+                return false;
+            }
+
+            // 遍历路由模块并且定义每层模块
+            for (len = parts.length; i < len; i++) {
+                // 如果父模块中不存在当前模块
+                if (typeof parent[parts[i]] === 'undefined') {
+                    // 申明当前模块
+                    parent[parts[i]] = {};
+                }
+                // 缓存下一层的祖父模块
+                old = parent;
+                // 缓存下一层的父级模块
+                parent = parent[parts[i]];
+            }
+            // 如果给定模块方法则定义该模块方法
+            if (fn) {
+                // 此时 i 等于 parts.length , 所以要减一
+                old[parts[--i]] = fn();
+            }
+            return this;
+        };
+
+        // 使用模块
+        static module() {
+            let args = Array.prototype.slice.call(arguments),               // 参数转为数组
+                fn = args.pop(),                // 获取执行的函数
+                parts = args[0] && args[0] instanceof Array ? args[0] : args,
+                modules = [],               // 依赖模块列表
+                modIDs = [],                // 模块路由
+                i = 0,                      // 依赖路由
+                ilen = parts.length,        // 依赖模块长度
+                parent, j, jlen;            // 分别是福模块， 模块路由层级索引， 模块路由层级长度
+
+            // 遍历依赖模块
+            while (i < ilen) {
+                if(typeof parts[i] === 'string') {
+                    parent = this;
+                    modIDs = parts[i].replace(/^F\./, '').split('.');
+                    // 遍历模块路由层级
+                    for(j = 0, jlen = modIDs.length; j< jlen; j++) {
+                        // 重置父模块
+                        parent = parent[modIDs[j]] || false;
+                    }
+                    // 将模块添加到依赖模块列表中去。
+                    modules.push(parent);
+                } else {
+                    // 直接头添加依赖模块列表中
+                    modules.push(parts[i]);
+                }
+                // 获取下一个依赖
+                i++;
+            }
+            fn.apply(null, modules);
+        }
+    }
+
+    // 测试模块的运行
+    F.define('string', function () {
+        return {
+            trim: function (str) {
+                // return str.trim();
+                return str.replace(/^\s+|\s+$/gm, '');
+            }
+        }
+    });
+    // 测试一下
+    console.log(F.string.trim('          11231234555111      '));
+
+
+    /*
+    * 对于模块的回调函数， 我们可以用构造函函数形式返回接口
+    * */
+    F.define('dom', function () {
+        let $ = function (id) {
+            $.dom = document.getElementById(id);
+            return $;
+        };
+        $.html = function (html) {
+            if (html) {
+                this.dom.innerHTML = html;
+                return this;
+            } else {
+                return this.dom.innerHTML;
+            }
+        };
+        return $;
+    });
+    // 测试
+    console.log(F.dom('test').html());
+
+    // 为dom 添加 addClass方法
+    F.define('dom.addClass');
+    F.dom.addClass = function (type, fn) {
+        return function (className) {
+            if (this.dom.className.indexOf(className) === -1) {
+                // 简单添加class
+                this.dom.className += ' ' + className;
+            }
+        }
+    }();
+    F.dom('test').addClass('123');
+
+    // 模块调用的测试
+    F.module(['dom', document], function (dom, doc) {
+        dom('test').html('new add!!!!');
+        doc.body.style.color = 'red';
+    });
+
+    F.module('dom', 'string.trim', function (dom, trim) {
+        let html = dom('test').html();
+        let str = trim(html);
+        console.log('html: ', html);
+        console.log('str: ', str);
+    })
+</script>
+</body>
+</html>

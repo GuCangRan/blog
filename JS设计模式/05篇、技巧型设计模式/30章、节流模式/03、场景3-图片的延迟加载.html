@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    let throttle = function () {
+        let isClear = arguments[0], fn;
+
+        // 第一个参数表示是否清楚计时器
+        if (typeof isClear === 'boolean') {
+            // 第二个参数则为函数
+            fn = arguments[1];
+            fn.__trottleID && clearTimeout(fn.__trottleID);
+        } else {
+            // 第一个参数为函数
+            fn = isClear;
+            // 第二个参数为函数执行时候的参数
+            let param = arguments[1];
+            let p = Object.assign({
+                context: null,
+                args: [],
+                time: 300
+            }, param);
+            arguments.callee(true, fn);
+            fn.__trottleID = setTimeout(function () {
+                fn.apply(p.context, p.args)
+            }, p.time)
+        }
+    };
+
+    /*
+    * 首先是坚挺页面的scroll 与 resize 事件， 对这两个时间做节流处理
+    * */
+    class LazyLoad {
+        constructor(id) {
+            this.container = document.getElementById(id);
+            this.imgs = this.getImgs();
+            this.init();
+        }
+
+        // 开始执行逻辑
+        init() {
+            this.update();
+            this.bindEvent();
+        }
+
+        // 获取延迟加载图片
+        getImgs() {
+            let arr = [];
+            let imgs = this.container.getElementsByTagName('img');
+            for (let i = 0, len = imgs.length; i < len; i++) {
+                arr.push(imgs[i])
+            }
+            return arr;
+        }
+
+        // 加载图片
+        update() {
+            if (!this.imgs.length) {
+                return false;
+            }
+            // 图片长度
+            let i = this.imgs.length;
+            // 遍历图片
+            for (--i; i >= 0; i--) {
+                if(this.shouldShow(i)) {
+                    this.imgs[i].src = this.imgs[i].getAttribute('data-src');
+                    // 清除缓存图片
+                    this.igms.splice(i, 1);
+                }
+            }
+        }
+
+        // 判断图片是否在可视范围内
+        shouldShow(i) {
+            let img = this.imgs[i];
+
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop,      // 可视范围顶部
+                scrollBottom  = scrollTop + document.documentElement.clientHeight;              // 可视范围底部
+            let imgTop = this.pageY(img),                   // 图片的顶部位置
+                imgBottom = imgTop + img.offsetHeight;      // 图片的额底部位置
+
+            /*
+            * 判断图片是否在可视范围内：
+            * 图片底部高度大于可视视图顶部高度并且图片底部低于可视视图底部高度，
+            * 或者 图片顶部高度大于可视视图顶部高度并且图片顶部高度小于可视视图底部高度
+            * */
+            if(imgBottom > scrollTop && imgBottom < scrollBottom || (imgTop > scrollTop && imgTop < scrollBottom)) {
+                return true;
+            }
+            // 不满足上面的条件
+            return false;
+        }
+
+        // 获取元素页面中的纵坐标
+        pageY(element) {
+            if(element.offsetParent) {
+                return element.offsetTop + this.pageY(element.offsetParent);
+            } else {
+                return element.offsetTop;
+            }
+        }
+
+        // 绑定时间简化版
+        on(element, type, fn) {
+            if(element.addEventListener) {
+                addEventListener(type, fn, false);
+            } else {
+                element.attachEvent('on'+type, fn, false);
+            }
+        }
+
+        // 为窗口帮绑定resize事件与scroll 事件
+        bindEvent() {
+            this.on(window, 'resize',  () => {
+                // 节流处理更新图片逻辑
+                throttle(this.update, {
+                    context: this
+                })
+            });
+            this.on(window, 'scroll', ()=> {
+                throttle(this.update, {
+                    context: this
+                })
+            })
+        }
+    }
+</script>
+</body>
+</html>
