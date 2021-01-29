@@ -1,0 +1,47 @@
+{
+  "manifest_version": 2,
+  "name": "book_crx",
+  "version": "1.0.0",
+  "description": "简单的Chrome扩展在线阅读小说去掉广告",
+  "icons": {
+    "16": "img/icon.png",
+    "48": "img/icon.png",
+    "128": "img/icon.png"
+  },
+  "background": {
+    "scripts": ["main.js"]
+  },
+  "browser_action": {
+    "default_icon": "img/icon.png",
+    "default_title": "这是一个示例Chrome插件",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "main.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "notifications",
+    "webRequest",
+    "webRequestBlocking",
+    "storage"
+  ],
+  "web_accessible_resources": [
+    "main.js"
+  ],
+  "homepage_url": "https://imondo.cn",
+  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true,
+    "open_in_tab": true
+  },
+  "content_security_policy": "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net; object-src 'self';"
+}
