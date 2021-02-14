@@ -18,7 +18,7 @@
 
 【发布到仓库，git pull push】
 
-这个笔记b站教程：https://www.bilibili.com/video/BV1og4y1q7M4?
+
 
 
 
