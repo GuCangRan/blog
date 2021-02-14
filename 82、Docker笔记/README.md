@@ -379,7 +379,7 @@ docker search mysql --filter=STARS=3000 # 搜索出Stars大于3000的
 
 ![image-20200616174440284](pic/image-20200616174440284.png)
 
-【视频书签，https://www.bilibili.com/video/BV1og4y1q7M4?p=9】
+
 
 
 
@@ -631,7 +631,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 ### 常用其他命令
 
-【视频书签：https://www.bilibili.com/video/BV1og4y1q7M4?p=11】
+
 
 #### 后台启动docker
 
@@ -1292,7 +1292,7 @@ exit
 
 ![image-20200618100551587](pic/image-20200618100551587.png)
 
-【视频书签：https://www.bilibili.com/video/BV1og4y1q7M4?p=15】
+
 
 【20200618毕竟生产力工具，加油搞，这周一定刷完！！每次关机都要重连，麻烦(*╹▽╹*)】
 
@@ -1662,7 +1662,7 @@ docker run -d -p 3310:3306 -v /home/mysql/conf:/etc/mysql/conf.d -v /home/mysql/
 
 ### 具名和匿名挂载
 
-【视频书签：https://www.bilibili.com/video/BV1og4y1q7M4?p=23】
+
 
 ![image-20200618203452205](pic/image-20200618203452205.png)
 
@@ -1770,7 +1770,6 @@ docker images
 
 ### 多个容器数据共享
 
-【视频书签：https://www.bilibili.com/video/BV1og4y1q7M4?p=25】
 
 ![image-20200621165403842](pic/image-20200621165403842.png)
 
@@ -2002,7 +2001,7 @@ ifconfig
 
 ### CMD与ENTRYPOINT
 
-【视频书签，https://www.bilibili.com/video/BV1og4y1q7M4?p=29】
+
 
 ```shell
 
@@ -2026,7 +2025,7 @@ Docker中许多命令都十分相似，我们需要了解他们的区别，最�
 
 ### 实战Tomcat镜像
 
-【视频书签，https://www.bilibili.com/video/BV1og4y1q7M4?p=30】
+
 
 ## IDEA整合Docker
 
