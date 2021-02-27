@@ -1,0 +1,172 @@
+@import "./common.scss";
+.calendar_body {
+  position: relative;
+  width: 100%;
+}
+.calendar_arrow{
+    position: absolute;
+    bottom: 0;
+    background: #fff;
+    width: 100%;
+    height: px2vw(40);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+        width: px2vw(60);
+        transform: scaleY(0.5);
+    }
+    .calendar_arrow_down{
+        transform: rotate(180deg) scaleY(0.5);
+    }
+}
+
+.calendar_group {
+  overflow: hidden;
+  transition: height 0.2s;
+  -webkit-transition: height 0.2s;
+//   background-color: red;
+}
+
+.calendar_group ul {
+  margin: 0;
+  height: 100%;
+}
+
+.calendar_group_li {
+  position: absolute;
+  top: 0;
+  left: px2vw(4);
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  background: white;
+  will-change: transform;
+  display: flex;
+}
+
+.calendar_item {
+  width: 14.13333335%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.calendar_item_disable {
+  background-color: #f5f7fa;
+  opacity: 1;
+  cursor: not-allowed;
+  color: #c0c4cc;
+}
+.calendar_month {
+  position: absolute;
+  font-size: px2vw(400);
+  color: #1c71fb;
+  transition: opacity 0.2s;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+.calendar_weekday {
+  font-size: px2vw(18);
+  height: px2vw(60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: px2vw(8);
+}
+.calendar_day {
+  position: relative;
+  width: px2vw(80);
+  height: px2vw(80);
+  border-radius: 50%;
+  font-size: px2vw(28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: px2vw(8);
+  flex-direction: column;
+}
+
+.calendar_first_today {
+  color: #1c71fb;
+}
+
+.calendar_first_today span {
+  font-size: px2vw(20);
+  margin-top: px2vw(3);
+}
+
+.calendar_day_today {
+  background: #d7f4fc;
+  color: #1c71fb;
+  .calendar_lunarday {
+    color: inherit;
+  }
+}
+
+.calendar_mark_circle {
+  border: 1px solid #1c71fb;
+}
+
+.calendar_day_not {
+  color: #c0c4cc;
+  .calendar_lunarday {
+    color: inherit;
+  }
+}
+
+.calendar_day_checked {
+  background: #1c71fb;
+  color: white;
+  .calendar_lunarday {
+    color: inherit;
+  }
+}
+.calendar_solarday {
+  font-size: px2vw(23);
+}
+.calendar_lunarday {
+  font-size: px2vw(16);
+  color: #898989;
+}
+.calendar_dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  bottom: px2vw(5);
+}
+.calendar_week {
+  width: 100%;
+  display: flex;
+  background: white;
+  color: #898989;
+  z-index: 2;
+}
+.calendar_week_preview{
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  z-index: 2;
+  ul{
+    transition-delay: 0.8s;
+  }
+}
+.calendar_week_item{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  will-change: transform;
+  display: flex;
+}
