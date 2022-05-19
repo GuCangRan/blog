@@ -1,5 +1,7 @@
 参考：https://blog.csdn.net/TurboAnho/article/details/97924175
 
+依赖参考:  https://www.cnblogs.com/wmqiang/p/11602884.html
+          https://www.jianshu.com/p/8163ea4f3c72
 生成带有图片的word的文档
 
 ```java
